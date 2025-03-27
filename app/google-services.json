@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "284743805282",
+    "project_id": "energix-604e5",
+    "storage_bucket": "energix-604e5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284743805282:android:560e11966ff64f42cb243b",
+        "android_client_info": {
+          "package_name": "fr.isen.energix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO70n0SJeKviCVZfPAXtu83XGBVZPnimc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284743805282:android:a7abdbbd7abb6b62cb243b",
+        "android_client_info": {
+          "package_name": "fr.isen.energixonkotlin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO70n0SJeKviCVZfPAXtu83XGBVZPnimc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
