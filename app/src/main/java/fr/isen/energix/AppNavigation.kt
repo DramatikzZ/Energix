@@ -12,6 +12,11 @@ import fr.isen.energix.screen.auth.AuthScreen
 import fr.isen.energix.screen.auth.ForgotPasswordScreen
 import fr.isen.energix.screen.auth.LoginScreen
 import fr.isen.energix.screen.auth.SignupScreen
+import fr.isen.energix.screen.pieces.BathroomScreen
+import fr.isen.energix.screen.pieces.ChambreScreen
+import fr.isen.energix.screen.pieces.CuisineScreen
+import fr.isen.energix.screen.pieces.PieceScreen
+import fr.isen.energix.screen.pieces.SalonScreen
 
 @Composable
 fun AppNavigation(modifier : Modifier = Modifier) {
@@ -20,7 +25,7 @@ fun AppNavigation(modifier : Modifier = Modifier) {
 
     val isLoggedIn = Firebase.auth.currentUser!=null
 
-    val start = if(isLoggedIn) "auth" else  "auth"
+    val start = if(isLoggedIn) "home" else  "auth"
 
     NavHost(navController = navController, startDestination = start) {
 
@@ -43,11 +48,33 @@ fun AppNavigation(modifier : Modifier = Modifier) {
         composable("home") {
             HomeScreen(modifier, navController)
         }
+
         composable("survey") {
             SurveyScreen(modifier, navController)
         }
+
         composable("loading") {
             LoadingCalculScreen(navController)
+        }
+
+        composable("pieces") {
+            PieceScreen(modifier, navController)
+        }
+
+        composable("bathroom") {
+            BathroomScreen(modifier, navController)
+        }
+
+        composable("chambre") {
+            ChambreScreen(modifier, navController)
+        }
+
+        composable("cuisine") {
+            CuisineScreen(modifier, navController)
+        }
+
+        composable("salon") {
+            SalonScreen(modifier, navController)
         }
     }
 }

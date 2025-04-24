@@ -23,6 +23,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,11 +41,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import fr.isen.energix.R
+import fr.isen.energix.utils.TopBar
 
 @Composable
 fun SurveyScreen(modifier: Modifier = Modifier, navController: NavController) {
     var housingType by remember { mutableStateOf("") }
-    var residentsCount by remember { mutableStateOf(1) }
+    var residentsCount by remember { mutableIntStateOf(1) }
     var objectives by remember { mutableStateOf<List<String>>(emptyList()) }
 
     Column(
@@ -58,29 +60,12 @@ fun SurveyScreen(modifier: Modifier = Modifier, navController: NavController) {
                 )
             )
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 32.dp, vertical = 16.dp),
+            .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Logo et titre ENERGIX
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo_energix),
-                contentDescription = "logo",
-                modifier = Modifier.height(80.dp)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = "ENERGIX",
-                fontSize = 36.sp,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-        }
+
+        TopBar(modifier)
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -271,7 +256,7 @@ fun SurveyScreen(modifier: Modifier = Modifier, navController: NavController) {
             onClick = {
                 // Envoyer d'abord les données à Firebase
                 // Puis naviguer vers l'écran de chargement
-                navController.navigate("loading") {
+                navController.navigate("pieces") {
                     popUpTo("survey") { inclusive = true }
                 }
             },

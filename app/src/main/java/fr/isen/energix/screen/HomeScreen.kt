@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import fr.isen.energix.R
+import fr.isen.energix.utils.TopBar
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
@@ -50,28 +51,12 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
                 )
             )
             .verticalScroll(rememberScrollState())
-            .padding(32.dp),
+            .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Logo et titre
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo_energix),
-                contentDescription = "logo",
-                modifier = Modifier.height(100.dp)
-            )
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(
-                text = "ENERGIX",
-                fontSize = 40.sp,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-        }
+
+        TopBar(modifier)
 
         Spacer(modifier = Modifier.height(20.dp))
 
