@@ -43,5 +43,11 @@ fun AppNavigation(modifier : Modifier = Modifier) {
         composable("home") {
             HomeScreen(modifier, navController)
         }
+        composable("survey") {
+            SurveyScreen(modifier, navController)
+        }
+        composable("loading") {
+            LoadingCalculScreen(navController)
+        }
     }
 }

@@ -56,12 +56,12 @@ fun AuthScreen(modifier: Modifier = Modifier, navController : NavHostController)
             Image(
                 painter = painterResource(id = R.drawable.logo_energix),
                 contentDescription = "logo",
-                modifier = Modifier.height(120.dp)
+                modifier = Modifier.height(100.dp)
             )
             Spacer(modifier = Modifier.width(20.dp))
             Text(
                 text = "ENERGIX",
-                fontSize = 50.sp,
+                fontSize = 40.sp,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
             )
