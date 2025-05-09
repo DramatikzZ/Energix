@@ -1,4 +1,4 @@
-package fr.isen.energix.screen.pieces
+package fr.isen.energix.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -31,12 +31,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import fr.isen.energix.viewmodel.PiecesViewModel
 
 
 data class PieceItem(val type: String, var count: Int = 1)
 
 @Composable
-fun PieceScreen(modifier: Modifier, navController: NavHostController) {
+fun PieceScreen(modifier: Modifier, navController: NavHostController, viewModel: PiecesViewModel = viewModel()) {
     val selectedPiece by remember { mutableStateOf("") }
     val selectedPieces = remember { mutableStateListOf<PieceItem>() }
 
@@ -99,7 +101,16 @@ fun PieceScreen(modifier: Modifier, navController: NavHostController) {
             }
 
             OutlinedButton(
-                onClick = { navController.navigate("salon") },
+                onClick = {
+                    viewModel.setPieces(selectedPieces) // on enregistre dans le ViewModel
+                    val flatPieces = viewModel.getFlatPieceListWithIndex()
+                    if (flatPieces.isNotEmpty()) {
+                        navController.navigate("appareil/0")
+                    }
+
+
+                },
+                enabled = selectedPieces.isNotEmpty(), // a changer potentiellement, je vérifie seulement si il y 1 seule pièce de sélectionnée
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
