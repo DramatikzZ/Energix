@@ -1,44 +1,33 @@
 package fr.isen.energix.screen.pieces
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import fr.isen.energix.utils.TopBar
-import androidx.compose.material3.*
-import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-//import androidx.compose.material.icons.filled.Remove
-
+import androidx.navigation.NavHostController
+import fr.isen.energix.utils.TopBar
 
 data class PieceItem(val type: String, var count: Int = 1)
 
 @Composable
 fun PieceScreen(modifier: Modifier, navController: NavHostController) {
-    val selectedPiece by remember { mutableStateOf("") }
+    var selectedPiece by remember { mutableStateOf("") }
     val selectedPieces = remember { mutableStateListOf<PieceItem>() }
+
+    val isFormValid = selectedPieces.isNotEmpty()
 
     Column(
         modifier = Modifier
@@ -52,7 +41,6 @@ fun PieceScreen(modifier: Modifier, navController: NavHostController) {
             )
     ) {
         TopBar(modifier)
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Column(
@@ -64,15 +52,14 @@ fun PieceScreen(modifier: Modifier, navController: NavHostController) {
             PieceDropdown(
                 selectedPiece = selectedPiece,
                 onPieceSelected = { piece ->
+                    selectedPiece = piece
                     val index = selectedPieces.indexOfFirst { it.type == piece }
                     if (index != -1) {
                         val existing = selectedPieces[index]
-                        val updated = existing.copy(count = existing.count + 1)
-                        selectedPieces[index] = updated
+                        selectedPieces[index] = existing.copy(count = existing.count + 1)
                     } else {
                         selectedPieces.add(PieceItem(piece))
                     }
-
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -85,27 +72,32 @@ fun PieceScreen(modifier: Modifier, navController: NavHostController) {
                     PieceItemRow(
                         piece = pieceItem,
                         onIncrement = {
-                            val updated = pieceItem.copy(count = pieceItem.count + 1)
-                            selectedPieces[index] = updated
+                            selectedPieces[index] = pieceItem.copy(count = pieceItem.count + 1)
                         },
                         onDecrement = {
                             if (pieceItem.count > 1) {
-                                val updated = pieceItem.copy(count = pieceItem.count - 1)
-                                selectedPieces[index] = updated
+                                selectedPieces[index] = pieceItem.copy(count = pieceItem.count - 1)
                             }
                         }
                     )
                 }
             }
 
+            Spacer(modifier = Modifier.height(24.dp))
+
             OutlinedButton(
-                onClick = { navController.navigate("salon") },
+                onClick = {
+                    navController.navigate("salon")
+                },
+                enabled = isFormValid,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Yellow,
-                    contentColor = Color.Black
+                    containerColor = if (isFormValid) Color.Yellow else Color.LightGray,
+                    contentColor = Color.Black,
+                    disabledContainerColor = Color.Gray,
+                    disabledContentColor = Color.White
                 )
             ) {
                 Text(
@@ -157,21 +149,12 @@ fun PieceDropdown(
                     onClick = {
                         onPieceSelected(piece)
                         expanded = false
-                    },
-                    colors = MenuItemColors(
-                        textColor = Color.Black,
-                        leadingIconColor = Color.White,
-                        trailingIconColor = Color.White,
-                        disabledTextColor = Color.White,
-                        disabledLeadingIconColor = Color.White,
-                        disabledTrailingIconColor = Color.White
-                    )
+                    }
                 )
             }
         }
     }
 }
-
 
 @Composable
 fun PieceItemRow(
@@ -193,13 +176,11 @@ fun PieceItemRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Nom de la pièce
             Text(text = piece.type, style = MaterialTheme.typography.bodyLarge)
 
-            // Compteur + boutons
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onDecrement) {
-                    //Icon(Icons.Default.Remove, contentDescription = "Moins")
+                    Text("-", fontSize = 20.sp)
                 }
                 Text(
                     text = piece.count.toString(),
@@ -207,7 +188,7 @@ fun PieceItemRow(
                     style = MaterialTheme.typography.bodyLarge
                 )
                 IconButton(onClick = onIncrement) {
-                    Icon(Icons.Default.Add, contentDescription = "Plus")
+                    Icon(Icons.Default.Add, contentDescription = "Ajouter")
                 }
             }
         }

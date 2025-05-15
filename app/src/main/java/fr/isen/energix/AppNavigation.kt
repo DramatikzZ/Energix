@@ -18,6 +18,7 @@ import fr.isen.energix.screen.pieces.CuisineScreen
 import fr.isen.energix.screen.pieces.PieceScreen
 import fr.isen.energix.screen.pieces.SalonScreen
 
+
 @Composable
 fun AppNavigation(modifier : Modifier = Modifier) {
 
@@ -26,6 +27,7 @@ fun AppNavigation(modifier : Modifier = Modifier) {
     val isLoggedIn = Firebase.auth.currentUser!=null
 
     val start = if(isLoggedIn) "home" else  "auth"
+
 
     NavHost(navController = navController, startDestination = start) {
 
@@ -76,5 +78,6 @@ fun AppNavigation(modifier : Modifier = Modifier) {
         composable("salon") {
             SalonScreen(modifier, navController)
         }
+
     }
 }
