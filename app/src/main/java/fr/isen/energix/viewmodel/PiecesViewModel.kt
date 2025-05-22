@@ -2,7 +2,9 @@ package fr.isen.energix.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import fr.isen.energix.screen.pieces.PieceItem
+
+import fr.isen.energix.screen.PieceItem
+
 
 class PiecesViewModel : ViewModel() {
 
@@ -28,3 +30,4 @@ class PiecesViewModel : ViewModel() {
         return result
     }
 }
+

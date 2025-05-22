@@ -161,6 +161,7 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
                     fontFamily = FontFamily.Monospace
                 )
             }
+
         }
     }
 }

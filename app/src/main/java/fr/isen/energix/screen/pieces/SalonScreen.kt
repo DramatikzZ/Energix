@@ -162,6 +162,7 @@ fun SalonScreen(modifier: Modifier = Modifier, navController: NavController) {
                     fontFamily = FontFamily.Monospace
                 )
             }
+
         }
     }
 }
