@@ -2,6 +2,7 @@ package fr.isen.energix
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -12,69 +13,72 @@ import fr.isen.energix.screen.auth.AuthScreen
 import fr.isen.energix.screen.auth.ForgotPasswordScreen
 import fr.isen.energix.screen.auth.LoginScreen
 import fr.isen.energix.screen.auth.SignupScreen
-import fr.isen.energix.screen.pieces.BathroomScreen
 import fr.isen.energix.screen.pieces.ChambreScreen
 import fr.isen.energix.screen.pieces.CuisineScreen
-import fr.isen.energix.screen.pieces.PieceScreen
+import fr.isen.energix.screen.PieceScreen
 import fr.isen.energix.screen.pieces.SalonScreen
+import fr.isen.energix.viewmodel.PiecesViewModel
 
 @Composable
 fun AppNavigation(modifier : Modifier = Modifier) {
 
     val navController = rememberNavController()
-
     val isLoggedIn = Firebase.auth.currentUser!=null
-
     val start = if(isLoggedIn) "home" else  "auth"
+    val piecesViewModel: PiecesViewModel = viewModel()
 
     NavHost(navController = navController, startDestination = start) {
 
-        composable("auth") {
-            AuthScreen(modifier, navController)
-        }
 
-        composable("login") {
-            LoginScreen(modifier, navController)
-        }
+        // Début authentification
+        composable("auth") { AuthScreen(modifier, navController) }
+        composable("login") { LoginScreen(modifier, navController) }
+        composable("signup") { SignupScreen(modifier, navController) }
+        composable("forgot") { ForgotPasswordScreen(modifier, navController) }
+        // Fin authentification
 
-        composable("signup") {
-            SignupScreen(modifier, navController)
-        }
 
-        composable("forgot") {
-            ForgotPasswordScreen(modifier, navController)
-        }
+        composable("home") { HomeScreen(modifier, navController) }
+        composable("survey") { SurveyScreen(modifier, navController) }
+        composable("loading") { LoadingCalculScreen(navController) }
 
-        composable("home") {
-            HomeScreen(modifier, navController)
-        }
 
-        composable("survey") {
-            SurveyScreen(modifier, navController)
-        }
+        // Début Pièces Questionnaire
+        composable("pieces") { PieceScreen(modifier, navController, viewModel = piecesViewModel) }
+        composable("appareil/{index}") { backStackEntry ->
+            val index = backStackEntry.arguments?.getString("index")?.toIntOrNull() ?: 0
+            val flatPieces = piecesViewModel.getFlatPieceListWithIndex()
+            val pieceInfo = flatPieces.getOrNull(index)
 
-        composable("loading") {
-            LoadingCalculScreen(navController)
+            if (pieceInfo != null) {
+                val (type, number) = pieceInfo
+                when (type) {
+                    "Cuisine" -> CuisineScreen(number, onNext = {
+                        if (index + 1 < flatPieces.size) {
+                            navController.navigate("appareil/${index + 1}")
+                        } else {
+                            navController.navigate("loading")
+                        }
+                    })
+                    "Salon" -> SalonScreen(number, onNext = {
+                        if (index + 1 < flatPieces.size) {
+                            navController.navigate("appareil/${index + 1}")
+                        } else {
+                            navController.navigate("loading")
+                        }
+                    })
+                    "Chambre" -> ChambreScreen(number, onNext = {
+                        if (index + 1 < flatPieces.size) {
+                            navController.navigate("appareil/${index + 1}")
+                        } else {
+                            navController.navigate("loading")
+                        }
+                    })
+                }
+            }
         }
+        // Fin Pièces Questionnaire
 
-        composable("pieces") {
-            PieceScreen(modifier, navController)
-        }
 
-        composable("bathroom") {
-            BathroomScreen(modifier, navController)
-        }
-
-        composable("chambre") {
-            ChambreScreen(modifier, navController)
-        }
-
-        composable("cuisine") {
-            CuisineScreen(modifier, navController)
-        }
-
-        composable("salon") {
-            SalonScreen(modifier, navController)
-        }
     }
 }
