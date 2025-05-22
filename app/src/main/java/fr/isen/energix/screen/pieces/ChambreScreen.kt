@@ -1,9 +1,10 @@
 package fr.isen.energix.screen.pieces
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,22 +33,31 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
-        database.addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child("Chambre").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val result = mutableMapOf<String, MutableList<String>>()
-                val snapshotChambre = snapshot.child("Chambre")
-                for (child in snapshotChambre.children) {
-                    val type = child.child("Type").getValue(String::class.java)
-                    val modele = child.child("Modele").getValue(String::class.java)
-                    if (!type.isNullOrBlank() && !modele.isNullOrBlank()) {
-                        result.getOrPut(type) { mutableListOf() }.add(modele)
+
+                for (typeSnapshot in snapshot.children) {
+                    val type = typeSnapshot.key ?: continue
+                    val modelesList = mutableListOf<String>()
+
+                    for (item in typeSnapshot.children) {
+                        val marque = item.child("Marque").getValue(String::class.java)
+                        val modele = item.child("Modele").getValue(String::class.java)
+
+                        if (!marque.isNullOrBlank() && !modele.isNullOrBlank()) {
+                            modelesList.add("$marque - $modele")
+                        }
+                    }
+
+                    if (modelesList.isNotEmpty()) {
+                        result[type] = modelesList
                     }
                 }
 
                 equipements = result
-
                 selections.clear()
-                equipements.keys.forEach { selections[it] = "" }
+                result.keys.forEach { selections[it] = "" }
                 isLoading = false
             }
 
@@ -61,6 +71,7 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(Color(0xFF089bac), Color(0xFF76d55d)),
@@ -91,7 +102,7 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
         if (isLoading) {
             CircularProgressIndicator()
         } else {
-            equipements.forEach { (equipement, modeles) ->
+            equipements.forEach { (type, modeles) ->
                 var expanded by remember { mutableStateOf(false) }
 
                 ExposedDropdownMenuBox(
@@ -102,10 +113,10 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
                         .padding(vertical = 8.dp)
                 ) {
                     TextField(
-                        value = selections[equipement] ?: "",
+                        value = selections[type] ?: "",
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text(equipement, fontFamily = FontFamily.Monospace) },
+                        label = { Text(type, fontFamily = FontFamily.Monospace) },
                         modifier = Modifier.menuAnchor().fillMaxWidth(),
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.White,
@@ -121,7 +132,7 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
                             DropdownMenuItem(
                                 text = { Text(modele) },
                                 onClick = {
-                                    selections[equipement] = modele
+                                    selections[type] = modele
                                     expanded = false
                                 }
                             )
@@ -134,7 +145,6 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
 
             OutlinedButton(
                 onClick = {
-                    // TODO : stocker les réponses ou aller à l'écran suivant
                     navController.navigate("nextPage")
                 },
                 modifier = Modifier

@@ -87,7 +87,11 @@ fun PieceScreen(modifier: Modifier, navController: NavHostController) {
 
             OutlinedButton(
                 onClick = {
-                    navController.navigate("salon")
+                    if (selectedPieces.any { it.type == "transports" }) {
+                        navController.navigate("transport")
+                    } else {
+                        navController.navigate("chambre") // ou une autre page de test
+                    }
                 },
                 enabled = isFormValid,
                 modifier = Modifier
@@ -117,7 +121,7 @@ fun PieceDropdown(
     onPieceSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val pieces = listOf("Salon", "Cuisine", "Chambre")
+    val pieces = listOf("Salon", "Cuisine", "Chambre", "Salle de bain", "transports")
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(

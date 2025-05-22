@@ -25,42 +25,47 @@ import fr.isen.energix.utils.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BathroomScreen(modifier: Modifier = Modifier, navController: NavController) {
+fun TransportScreen(modifier: Modifier = Modifier, navController: NavController) {
     val context = LocalContext.current
     val database = FirebaseDatabase.getInstance().getReference()
-    var equipements by remember { mutableStateOf<Map<String, List<String>>>(emptyMap()) }
+
+    var voitures by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) } // (marque, marque - modele)
+    var otherTransports by remember { mutableStateOf<Map<String, List<String>>>(emptyMap()) }
     val selections = remember { mutableStateMapOf<String, String>() }
+
     var isLoading by remember { mutableStateOf(true) }
 
+    var voitureExpanded by remember { mutableStateOf(false) }
+    var selectedVoiture by remember { mutableStateOf("") }
+    var marqueQuery by remember { mutableStateOf("") }
+
     LaunchedEffect(Unit) {
-        database.child("salle de bain").addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child("transports").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val result = mutableMapOf<String, MutableList<String>>()
+                val allVoitures = mutableListOf<Pair<String, String>>() // (marque, label)
+                val autres = mutableMapOf<String, MutableList<String>>()
 
                 for (typeSnapshot in snapshot.children) {
                     val type = typeSnapshot.key ?: continue
-                    val modelesList = mutableListOf<String>()
 
                     for (item in typeSnapshot.children) {
-                        val marque = item.child("Marque").getValue(String::class.java)
-                        val modele = item.child("Modele").getValue(String::class.java)
+                        val marque = item.child("Marque").getValue(String::class.java) ?: continue
+                        val modele = item.child("Modele").getValue(String::class.java) ?: continue
+                        val label = "$marque - $modele"
 
-                        val label = when {
-                            !marque.isNullOrBlank() && !modele.isNullOrBlank() -> "$marque - $modele"
-                            else -> "$type (aucun modèle)"
+                        if (type.equals("Voiture", ignoreCase = true)) {
+                            allVoitures.add(marque to label)
+                        } else {
+                            autres.getOrPut(type) { mutableListOf() }.add(label)
                         }
-
-                        modelesList.add(label)
-                    }
-
-                    if (modelesList.isNotEmpty()) {
-                        result[type] = modelesList
                     }
                 }
 
-                equipements = result
+                voitures = allVoitures
+                otherTransports = autres
                 selections.clear()
-                result.keys.forEach { selections[it] = "" }
+                autres.keys.forEach { selections[it] = "" }
+
                 isLoading = false
             }
 
@@ -70,7 +75,6 @@ fun BathroomScreen(modifier: Modifier = Modifier, navController: NavController) 
             }
         })
     }
-
 
     Column(
         modifier = Modifier
@@ -91,7 +95,7 @@ fun BathroomScreen(modifier: Modifier = Modifier, navController: NavController) 
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Salle de bain - Équipements",
+            text = "Moyens de transport",
             style = TextStyle(
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
@@ -106,7 +110,72 @@ fun BathroomScreen(modifier: Modifier = Modifier, navController: NavController) 
         if (isLoading) {
             CircularProgressIndicator()
         } else {
-            equipements.forEach { (type, modeles) ->
+            // Onglet VOITURE
+            Text(
+                text = "Voiture",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
+
+            ExposedDropdownMenuBox(
+                expanded = voitureExpanded,
+                onExpandedChange = { voitureExpanded = !voitureExpanded },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextField(
+                    value = selectedVoiture,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Sélectionnez votre voiture", fontFamily = FontFamily.Monospace) },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White
+                    )
+                )
+
+                ExposedDropdownMenu(
+                    expanded = voitureExpanded,
+                    onDismissRequest = { voitureExpanded = false }
+                ) {
+                    // Champ de recherche en haut du menu
+                    OutlinedTextField(
+                        value = marqueQuery,
+                        onValueChange = { marqueQuery = it },
+                        label = { Text("Quelle est votre marque ?") },
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth(),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.White,
+                            unfocusedContainerColor = Color.White
+                        )
+                    )
+
+                    // Liste filtrée
+                    voitures
+                        .filter { it.first.contains(marqueQuery, ignoreCase = true) }
+                        .forEach { (_, label) ->
+                            DropdownMenuItem(
+                                text = { Text(label) },
+                                onClick = {
+                                    selectedVoiture = label
+                                    voitureExpanded = false
+                                }
+                            )
+                        }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Autres moyens de transport (hors voiture)
+            otherTransports.forEach { (type, modeles) ->
                 var expanded by remember { mutableStateOf(false) }
 
                 ExposedDropdownMenuBox(
@@ -168,3 +237,4 @@ fun BathroomScreen(modifier: Modifier = Modifier, navController: NavController) 
         }
     }
 }
+

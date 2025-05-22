@@ -17,6 +17,7 @@ import fr.isen.energix.screen.pieces.ChambreScreen
 import fr.isen.energix.screen.pieces.CuisineScreen
 import fr.isen.energix.screen.pieces.PieceScreen
 import fr.isen.energix.screen.pieces.SalonScreen
+import fr.isen.energix.screen.pieces.TransportScreen
 
 
 @Composable
@@ -77,6 +78,9 @@ fun AppNavigation(modifier : Modifier = Modifier) {
 
         composable("salon") {
             SalonScreen(modifier, navController)
+        }
+        composable("transport") {
+            TransportScreen(modifier, navController)
         }
 
     }
