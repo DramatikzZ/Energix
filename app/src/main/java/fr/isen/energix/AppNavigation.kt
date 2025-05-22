@@ -13,19 +13,26 @@ import fr.isen.energix.screen.auth.AuthScreen
 import fr.isen.energix.screen.auth.ForgotPasswordScreen
 import fr.isen.energix.screen.auth.LoginScreen
 import fr.isen.energix.screen.auth.SignupScreen
+import fr.isen.energix.screen.pieces.BathroomScreen
 import fr.isen.energix.screen.pieces.ChambreScreen
 import fr.isen.energix.screen.pieces.CuisineScreen
-import fr.isen.energix.screen.PieceScreen
+import fr.isen.energix.screen.pieces.PieceScreen
 import fr.isen.energix.screen.pieces.SalonScreen
+import fr.isen.energix.screen.pieces.TransportScreen
 import fr.isen.energix.viewmodel.PiecesViewModel
+
 
 @Composable
 fun AppNavigation(modifier : Modifier = Modifier) {
 
     val navController = rememberNavController()
     val isLoggedIn = Firebase.auth.currentUser!=null
+
+
     val start = if(isLoggedIn) "home" else  "auth"
+
     val piecesViewModel: PiecesViewModel = viewModel()
+
 
     NavHost(navController = navController, startDestination = start) {
 
@@ -41,6 +48,7 @@ fun AppNavigation(modifier : Modifier = Modifier) {
         composable("home") { HomeScreen(modifier, navController) }
         composable("survey") { SurveyScreen(modifier, navController) }
         composable("loading") { LoadingCalculScreen(navController) }
+
 
 
         // Début Pièces Questionnaire
@@ -78,7 +86,6 @@ fun AppNavigation(modifier : Modifier = Modifier) {
             }
         }
         // Fin Pièces Questionnaire
-
 
     }
 }

@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,7 +30,7 @@ import androidx.navigation.NavHostController
 import fr.isen.energix.R
 
 @Composable
-fun AuthScreen(modifier: Modifier = Modifier, navController : NavHostController) {
+fun AuthScreen(modifier: Modifier = Modifier, navController: NavHostController) {
 
     Column(
         modifier = Modifier
@@ -48,11 +47,11 @@ fun AuthScreen(modifier: Modifier = Modifier, navController : NavHostController)
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        Row (
+        // Logo et titre de l'application
+        Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
-        )
-        {
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_energix),
                 contentDescription = "logo",
@@ -62,18 +61,17 @@ fun AuthScreen(modifier: Modifier = Modifier, navController : NavHostController)
             Text(
                 text = "ENERGIX",
                 fontSize = 40.sp,
-                fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
             )
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        // Titre de l'écran : Authentification
         Text(
             text = "Authentification",
             style = TextStyle(
                 fontSize = 30.sp,
-                fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center
             )
@@ -81,6 +79,7 @@ fun AuthScreen(modifier: Modifier = Modifier, navController : NavHostController)
 
         Spacer(modifier = Modifier.height(30.dp))
 
+        // Bouton "Se connecter"
         OutlinedButton(
             onClick = {
                 navController.navigate("login")
@@ -89,22 +88,23 @@ fun AuthScreen(modifier: Modifier = Modifier, navController : NavHostController)
                 .fillMaxWidth()
                 .height(60.dp),
             colors = ButtonColors(
-                containerColor =  Color.Yellow,
-                contentColor =  Color.Black,
-                disabledContainerColor =  Color.Yellow,
-                disabledContentColor =  Color.Yellow
+                containerColor = Color.Yellow,
+                contentColor = Color.Black,
+                disabledContainerColor = Color.Yellow,
+                disabledContentColor = Color.Yellow
             )
-
         ) {
             Text(
                 text = "Se connecter",
-                fontSize = 22.sp
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold // Poids du texte
             )
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        OutlinedButton (
+        // Bouton "Créer un compte"
+        OutlinedButton(
             onClick = {
                 navController.navigate("signup")
             },
@@ -112,15 +112,16 @@ fun AuthScreen(modifier: Modifier = Modifier, navController : NavHostController)
                 .fillMaxWidth()
                 .height(60.dp),
             colors = ButtonColors(
-                containerColor =  Color.White,
-                contentColor =  Color.Black,
-                disabledContainerColor =  Color.White,
-                disabledContentColor =  Color.White
+                containerColor = Color.White,
+                contentColor = Color.Black,
+                disabledContainerColor = Color.White,
+                disabledContentColor = Color.White
             )
         ) {
             Text(
                 text = "Créer un compte",
-                fontSize = 22.sp
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold // Poids du texte
             )
         }
     }

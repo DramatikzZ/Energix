@@ -25,7 +25,7 @@ import fr.isen.energix.utils.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
+fun BathroomScreen(modifier: Modifier = Modifier, navController: NavController) {
     val context = LocalContext.current
     val database = FirebaseDatabase.getInstance().getReference()
     var equipements by remember { mutableStateOf<Map<String, List<String>>>(emptyMap()) }
@@ -33,7 +33,7 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
-        database.child("Chambre").addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child("salle de bain").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val result = mutableMapOf<String, MutableList<String>>()
 
@@ -45,9 +45,12 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
                         val marque = item.child("Marque").getValue(String::class.java)
                         val modele = item.child("Modele").getValue(String::class.java)
 
-                        if (!marque.isNullOrBlank() && !modele.isNullOrBlank()) {
-                            modelesList.add("$marque - $modele")
+                        val label = when {
+                            !marque.isNullOrBlank() && !modele.isNullOrBlank() -> "$marque - $modele"
+                            else -> "$type (aucun modèle)"
                         }
+
+                        modelesList.add(label)
                     }
 
                     if (modelesList.isNotEmpty()) {
@@ -68,6 +71,7 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
         })
     }
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -87,7 +91,7 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Chambre - Équipements",
+            text = "Salle de bain - Équipements",
             style = TextStyle(
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
@@ -161,7 +165,6 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
                     fontFamily = FontFamily.Monospace
                 )
             }
-
         }
     }
 }

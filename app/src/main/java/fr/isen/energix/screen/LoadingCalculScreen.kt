@@ -2,16 +2,7 @@ package fr.isen.energix.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +13,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -61,7 +51,6 @@ fun LoadingCalculScreen(navController: NavController) {
             Text(
                 text = "ENERGIX",
                 fontSize = 36.sp,
-                fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
@@ -95,17 +84,19 @@ fun LoadingCalculScreen(navController: NavController) {
             text = "Veuillez patienter",
             style = TextStyle(
                 fontSize = 18.sp,
+                fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
                 color = Color.White
             )
         )
+
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Message d'attente
         Text(
             text = "Analyse de votre consommation en cours...",
             style = TextStyle(
                 fontSize = 18.sp,
+                fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center,
                 color = Color.White
             )

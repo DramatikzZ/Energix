@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -44,18 +43,9 @@ import fr.isen.energix.viewmodel.AuthViewModel
 @Composable
 fun LoginScreen(modifier : Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel = viewModel()) {
 
-    var email by remember {
-        mutableStateOf("")
-    }
-
-    var password by remember {
-        mutableStateOf("")
-    }
-
-    var isLoading by remember {
-        mutableStateOf(false)
-    }
-
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     Column (
@@ -71,12 +61,11 @@ fun LoginScreen(modifier : Modifier = Modifier, navController: NavController, au
             .padding(32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Row (
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
-        )
-        {
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.logo_energix),
                 contentDescription = "logo",
@@ -86,45 +75,41 @@ fun LoginScreen(modifier : Modifier = Modifier, navController: NavController, au
             Text(
                 text = "ENERGIX",
                 fontSize = 40.sp,
-                fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
             )
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        // Bonjour - avec la même police et poids que sur d'autres pages
         Text(
             text = "Bonjour",
             modifier = Modifier.fillMaxWidth(),
             style = TextStyle(
                 fontSize = 30.sp,
-                fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
             )
         )
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        // Se connecter - même style que "Bonjour"
         Text(
             text = "Se connecter",
             modifier = Modifier.fillMaxWidth(),
             style = TextStyle(
                 fontSize = 22.sp,
-                fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
             )
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        // Champ email - avec les couleurs et l'espace appropriés
         OutlinedTextField(
             value = email,
-            onValueChange = {
-                email = it
-            },
-            label = {
-                Text(text = "email")
-            },
+            onValueChange = { email = it },
+            label = { Text(text = "Email") },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.White,
@@ -134,14 +119,11 @@ fun LoginScreen(modifier : Modifier = Modifier, navController: NavController, au
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        // Champ mot de passe - idem
         OutlinedTextField(
             value = password,
-            onValueChange = {
-                password = it
-            },
-            label = {
-                Text(text = "password")
-            },
+            onValueChange = { password = it },
+            label = { Text(text = "Mot de passe") },
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation(),
             colors = TextFieldDefaults.colors(
@@ -153,9 +135,9 @@ fun LoginScreen(modifier : Modifier = Modifier, navController: NavController, au
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(
-            onClick = {navController.navigate("forgot")}
+            onClick = { navController.navigate("forgot") }
         ) {
-            Text(text="mot de passe oublié ?")
+            Text(text = "Mot de passe oublié ?")
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -164,9 +146,9 @@ fun LoginScreen(modifier : Modifier = Modifier, navController: NavController, au
             onClick = {
                 isLoading = true
                 authViewModel.login(email, password) { success, errorMessage ->
-                    if(success) {
+                    if (success) {
                         authViewModel.checkEmailVerification { verified, message ->
-                            if(verified) {
+                            if (verified) {
                                 isLoading = false
                                 navController.navigate("home") {
                                     popUpTo("login") { inclusive = true }
@@ -183,42 +165,43 @@ fun LoginScreen(modifier : Modifier = Modifier, navController: NavController, au
                 }
             },
             colors = ButtonColors(
-                containerColor =  Color.Yellow,
-                contentColor =  Color.Black,
-                disabledContainerColor =  Color.Yellow,
-                disabledContentColor =  Color.Yellow
+                containerColor = Color.Yellow,
+                contentColor = Color.Black,
+                disabledContainerColor = Color.Yellow,
+                disabledContentColor = Color.Yellow
             ),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
         ) {
             Text(
-                text = if(isLoading) "Connexion" else "Se connecter",
-                fontSize = 22.sp
+                text = if (isLoading) "Connexion" else "Se connecter",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
             )
         }
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        Row (
+        Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
-        ){
-            Text(text = "Créer un compte")
+        ) {
+            Text(
+                text = "Créer un compte",
+            )
 
-            Button (
-                onClick = {
-                    navController.navigate("signup")
-                },
+            Button(
+                onClick = { navController.navigate("signup") },
                 colors = ButtonColors(
-                    containerColor =  Color.Transparent,
-                    contentColor =  Color.Black,
-                    disabledContentColor =  Color.Transparent,
-                    disabledContainerColor =  Color.Black
+                    containerColor = Color.Transparent,
+                    contentColor = Color.Black,
+                    disabledContentColor = Color.Transparent,
+                    disabledContainerColor = Color.Black
                 )
             ) {
                 Text(
-                    text = "Cliquez ici"
+                    text = "Cliquez ici",
                 )
             }
         }
