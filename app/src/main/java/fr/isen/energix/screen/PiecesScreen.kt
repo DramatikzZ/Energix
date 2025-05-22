@@ -136,7 +136,7 @@ fun PieceDropdown(
     onPieceSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val pieces = listOf("Salon", "Cuisine", "Chambre")
+    val pieces = listOf("Salon", "Cuisine", "Chambre", "Salle de bains")
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(

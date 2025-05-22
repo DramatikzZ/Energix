@@ -19,13 +19,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.google.firebase.database.*
 import fr.isen.energix.utils.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BathroomScreen(modifier: Modifier = Modifier, navController: NavController) {
+fun BathroomScreen(modifier: Modifier, number: Int, onNext: () -> Unit) {
     val context = LocalContext.current
     val database = FirebaseDatabase.getInstance().getReference()
     var equipements by remember { mutableStateOf<Map<String, List<String>>>(emptyMap()) }
@@ -91,7 +90,7 @@ fun BathroomScreen(modifier: Modifier = Modifier, navController: NavController) 
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Salle de bain - Équipements",
+            text = "Salle de bain n°$number - Équipements",
             style = TextStyle(
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
@@ -148,9 +147,7 @@ fun BathroomScreen(modifier: Modifier = Modifier, navController: NavController) 
             Spacer(modifier = Modifier.height(24.dp))
 
             OutlinedButton(
-                onClick = {
-                    navController.navigate("nextPage")
-                },
+                onClick = onNext,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),

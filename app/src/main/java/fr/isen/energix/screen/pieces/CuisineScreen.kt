@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,11 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import fr.isen.energix.utils.TopBar
 
 @Composable
-fun CuisineScreen(modifier: Modifier, navController: NavHostController) {
+fun CuisineScreen(modifier: Modifier, number: Int, onNext: () -> Unit) {
 
     Column(
         modifier = Modifier
@@ -38,12 +38,12 @@ fun CuisineScreen(modifier: Modifier, navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("C'est la cuisine")
+        Text("Configuration de la Cuisine $number", style = MaterialTheme.typography.headlineMedium)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedButton(
-            onClick = { navController.navigate("chambre") },
+            onClick = onNext,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp),

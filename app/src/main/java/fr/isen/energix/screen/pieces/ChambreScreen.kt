@@ -25,7 +25,7 @@ import fr.isen.energix.utils.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
+fun ChambreScreen(modifier: Modifier, number: Int, onNext: () -> Unit) {
     val context = LocalContext.current
     val database = FirebaseDatabase.getInstance().getReference()
     var equipements by remember { mutableStateOf<Map<String, List<String>>>(emptyMap()) }
@@ -87,7 +87,7 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Chambre - Équipements",
+            text = "Chambre n°$number - Équipements",
             style = TextStyle(
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
@@ -144,9 +144,7 @@ fun ChambreScreen(modifier: Modifier = Modifier, navController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             OutlinedButton(
-                onClick = {
-                    navController.navigate("nextPage")
-                },
+                onClick = onNext,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),

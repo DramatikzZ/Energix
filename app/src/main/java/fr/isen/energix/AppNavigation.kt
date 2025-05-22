@@ -16,9 +16,7 @@ import fr.isen.energix.screen.auth.SignupScreen
 import fr.isen.energix.screen.pieces.BathroomScreen
 import fr.isen.energix.screen.pieces.ChambreScreen
 import fr.isen.energix.screen.pieces.CuisineScreen
-import fr.isen.energix.screen.pieces.PieceScreen
 import fr.isen.energix.screen.pieces.SalonScreen
-import fr.isen.energix.screen.pieces.TransportScreen
 import fr.isen.energix.viewmodel.PiecesViewModel
 
 
@@ -61,21 +59,28 @@ fun AppNavigation(modifier : Modifier = Modifier) {
             if (pieceInfo != null) {
                 val (type, number) = pieceInfo
                 when (type) {
-                    "Cuisine" -> CuisineScreen(number, onNext = {
+                    "Cuisine" -> CuisineScreen(modifier, number, onNext = {
                         if (index + 1 < flatPieces.size) {
                             navController.navigate("appareil/${index + 1}")
                         } else {
                             navController.navigate("loading")
                         }
                     })
-                    "Salon" -> SalonScreen(number, onNext = {
+                    "Salon" -> SalonScreen(modifier, number, onNext = {
                         if (index + 1 < flatPieces.size) {
                             navController.navigate("appareil/${index + 1}")
                         } else {
                             navController.navigate("loading")
                         }
                     })
-                    "Chambre" -> ChambreScreen(number, onNext = {
+                    "Chambre" -> ChambreScreen(modifier, number, onNext = {
+                        if (index + 1 < flatPieces.size) {
+                            navController.navigate("appareil/${index + 1}")
+                        } else {
+                            navController.navigate("loading")
+                        }
+                    })
+                    "Salle de bains" -> BathroomScreen(modifier, number, onNext = {
                         if (index + 1 < flatPieces.size) {
                             navController.navigate("appareil/${index + 1}")
                         } else {
