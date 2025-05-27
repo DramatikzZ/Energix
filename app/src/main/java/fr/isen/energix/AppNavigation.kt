@@ -17,6 +17,9 @@ import fr.isen.energix.screen.pieces.BathroomScreen
 import fr.isen.energix.screen.pieces.ChambreScreen
 import fr.isen.energix.screen.pieces.CuisineScreen
 import fr.isen.energix.screen.pieces.SalonScreen
+import fr.isen.energix.screen.resume.ResumeListScreen
+import fr.isen.energix.screen.resume.ResumePieceScreen
+import fr.isen.energix.screen.resume.ResumeTotalScreen
 import fr.isen.energix.viewmodel.PiecesViewModel
 
 
@@ -24,13 +27,12 @@ import fr.isen.energix.viewmodel.PiecesViewModel
 fun AppNavigation(modifier : Modifier = Modifier) {
 
     val navController = rememberNavController()
+
     val isLoggedIn = Firebase.auth.currentUser!=null
 
-
-    val start = if(isLoggedIn) "home" else  "auth"
+    val start = if(isLoggedIn) "resume_list" else  "auth"
 
     val piecesViewModel: PiecesViewModel = viewModel()
-
 
     NavHost(navController = navController, startDestination = start) {
 
@@ -48,7 +50,6 @@ fun AppNavigation(modifier : Modifier = Modifier) {
         composable("loading") { LoadingCalculScreen(navController) }
 
 
-
         // Début Pièces Questionnaire
         composable("pieces") { PieceScreen(modifier, navController, viewModel = piecesViewModel) }
         composable("appareil/{index}") { backStackEntry ->
@@ -63,34 +64,44 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                         if (index + 1 < flatPieces.size) {
                             navController.navigate("appareil/${index + 1}")
                         } else {
-                            navController.navigate("loading")
+                            navController.navigate("resume_list")
                         }
                     })
                     "Salon" -> SalonScreen(modifier, number, onNext = {
                         if (index + 1 < flatPieces.size) {
                             navController.navigate("appareil/${index + 1}")
                         } else {
-                            navController.navigate("loading")
+                            navController.navigate("resume_list")
                         }
                     })
                     "Chambre" -> ChambreScreen(modifier, number, onNext = {
                         if (index + 1 < flatPieces.size) {
                             navController.navigate("appareil/${index + 1}")
                         } else {
-                            navController.navigate("loading")
+                            navController.navigate("resume_list")
                         }
                     })
                     "Salle de bains" -> BathroomScreen(modifier, number, onNext = {
                         if (index + 1 < flatPieces.size) {
                             navController.navigate("appareil/${index + 1}")
                         } else {
-                            navController.navigate("loading")
+                            navController.navigate("resume_list")
                         }
                     })
                 }
             }
         }
         // Fin Pièces Questionnaire
+
+
+        // Début Résumé
+        composable("resume_list") { ResumeListScreen(modifier, navController) }
+        composable("resume/total") { ResumeTotalScreen(modifier) }
+        composable("resume/{pieceType}") { backStackEntry ->
+            val pieceType = backStackEntry.arguments?.getString("pieceType") ?: "Inconnu"
+            ResumePieceScreen(modifier, pieceType)
+        }
+        // Fin Résumé
 
     }
 }
