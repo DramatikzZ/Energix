@@ -20,6 +20,7 @@ import fr.isen.energix.screen.pieces.SalonScreen
 import fr.isen.energix.screen.resume.ResumeListScreen
 import fr.isen.energix.screen.resume.ResumePieceScreen
 import fr.isen.energix.screen.resume.ResumeTotalScreen
+import fr.isen.energix.screen.pieces.TransportScreen
 import fr.isen.energix.viewmodel.PiecesViewModel
 
 
@@ -86,6 +87,13 @@ fun AppNavigation(modifier : Modifier = Modifier) {
                             navController.navigate("appareil/${index + 1}")
                         } else {
                             navController.navigate("resume_list")
+                        }
+                    })
+                    "Transports" -> TransportScreen(modifier, number, onNext = {
+                        if (index + 1 < flatPieces.size) {
+                            navController.navigate("appareil/${index + 1}")
+                        } else {
+                            navController.navigate("loading")
                         }
                     })
                 }
